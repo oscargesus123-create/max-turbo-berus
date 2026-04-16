@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Max Turbo - IA Berus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="pantalla-bloqueo" class="contenedor">
+        <h1>MAX TURBO <span class="resaltado">SISTEMAS</span></h1>
+        <p>Introduce el código de acceso para despertar a Berus</p>
+        <input type="password" id="input-codigo" placeholder="Código maestro...">
+        <button onclick="verificarCodigo()">ENTRAR</button>
+    </div>
+
+    <div id="pantalla-registro" class="contenedor oculto">
+        <h2>Registro de Operador</h2>
+        <input type="email" id="correo" placeholder="Correo electrónico">
+        <input type="password" id="pass" placeholder="Contraseña">
+        <div class="botones-fila">
+            <button onclick="registrar()">REGISTRARSE</button>
+            <button class="btn-secundario" onclick="verCuentas()">VER CUENTAS</button>
+        </div>
+    </div>
+
+    <div id="pantalla-chat" class="contenedor-chat oculto">
+        <header>
+            <div class="status-dot"></div>
+            <h3>IA BERUS <small>by Max Turbo</small></h3>
+        </header>
+        <div id="caja-chat">
+            <div class="mensaje-bot"><strong>IA Berus:</strong><br>Sistema en línea. ¿En qué puedo ayudarte hoy?</div>
+        </div>
+        <div class="controles">
+            <input type="text" id="pregunta" placeholder="Escribe un mensaje..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
+            <button onclick="enviarMensaje()">ENVIAR</button>
+        </div>
+    </div>
+
+    <div id="pantalla-admin" class="contenedor oculto">
+        <h2>Usuarios Registrados</h2>
+        <div id="lista-cuentas"></div>
+        <button onclick="volver()">VOLVER</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
