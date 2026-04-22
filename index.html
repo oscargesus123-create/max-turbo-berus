@@ -9,15 +9,11 @@
 <body>
 
     <div id="contenedor-principal">
-        <video id="video-intro" autoplay muted playsinline preload="auto">
-            <source src="intro.mp4" type="video/mp4">
-        </video>
-
-        <div id="info-inicio" class="card-inicio oculto-fade">
+        <div id="info-inicio" class="card-inicio">
             <h1>BERUS AI</h1>
             <p class="resumen">
-                Bienvenido a la inteligencia oficial de Max Turbo. 
-                Asistente avanzado diseñado por Oscar Jesús y su equipo.
+                Núcleo de inteligencia oficial de **Max Turbo**. 
+                Sistema de gestión avanzado desarrollado por Oscar Jesús y su equipo.
             </p>
             <button onclick="irAlRegistro()">INICIAR SISTEMA</button>
         </div>
@@ -25,18 +21,19 @@
 
     <div id="pantalla-registro" class="oculto">
         <div class="card-inicio">
-            <h2>Acceso al Sistema</h2>
-            <input type="email" id="correo" placeholder="Usuario">
+            <h2>Registro de Acceso</h2>
+            <input type="email" id="correo" placeholder="Correo Electrónico">
             <input type="password" id="pass" placeholder="Contraseña">
-            <button onclick="registrar()">ENTRAR</button>
+            <button onclick="registrar()">REGISTRAR Y ENTRAR</button>
         </div>
     </div>
 
     <div id="pantalla-chat" class="oculto">
+        <div class="header-chat">MAX TURBO - MODULO MULTIMEDIA ACTIVO</div>
         <div id="caja-chat"></div>
         <div class="entrada-chat">
-            <input type="text" id="pregunta" placeholder="Escribe a Berus...">
-            <button onclick="enviarMensaje()">Enviar</button>
+            <input type="text" id="pregunta" placeholder="Escribe 'avances' para ver videos...">
+            <button onclick="enviarMensaje()">ENVIAR</button>
         </div>
     </div>
 
