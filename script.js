@@ -103,7 +103,7 @@ function procesarVideo(op) {
         let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
         let desc = (op === 'a') ? "Maduro bailando como King Nasir" : "Letras Stephanie - Autopista Ciudad";
 
-        caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Generación completa.<br><small>${desc}</small><br><video width="100%" controls autoplay style="border-radius:10px; margin-top:10px;"><source src="${videoSrc}" type="video/mp4"></video></div>`;
+        caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Generación completa.<br><small>${desc}</small><br><video width="100%" controls style="border-radius:10px; margin-top:10px;"><source src="${videoSrc}" type="video/mp4"></video></div>`;
         caja.scrollTop = caja.scrollHeight;
     }, 15000);
 }
