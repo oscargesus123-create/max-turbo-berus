@@ -4,20 +4,17 @@ const PASS_ADMIN = "tejuaberus";
 let usuariosDB = JSON.parse(localStorage.getItem('cuentas_berus')) || [];
 let historialTotal = JSON.parse(localStorage.getItem('historial_berus')) || [];
 
-// --- LÓGICA DE LA INTRO REFORZADA ---
+// --- REPARADOR DE INTRO ---
 const videoIntro = document.getElementById('video-intro');
 const infoInicio = document.getElementById('info-inicio');
 
 if (videoIntro) {
-    // Intentar reproducir en cuanto cargue la página
-    window.addEventListener('load', () => {
-        videoIntro.muted = true; // Asegurar que esté silenciado para que el navegador lo deje arrancar
-        videoIntro.play().catch(error => {
-            console.log("Reproducción automática bloqueada. Reintentando...");
-            // Si falla, creamos un evento para que arranque al primer clic del usuario en cualquier parte
-            document.body.addEventListener('click', () => { videoIntro.play(); }, {once: true});
-        });
-    });
+    videoIntro.load();
+    let forzarPlay = setInterval(() => {
+        videoIntro.play().then(() => {
+            clearInterval(forzarPlay);
+        }).catch(e => console.log("Cargando sistema..."));
+    }, 500);
 
     videoIntro.onended = () => {
         infoInicio.classList.remove('oculto-fade');
@@ -58,13 +55,13 @@ async function enviarMensaje() {
     localStorage.setItem('historial_berus', JSON.stringify(historialTotal));
     pInput.value = '';
 
-    if (p.toLowerCase().includes("avance") || p.toLowerCase().includes("actualización")) {
+    if (p.toLowerCase().includes("avance")) {
         mostrarPreguntaAvanzada();
         return;
     }
 
     const idCarga = "c-" + Date.now();
-    caja.innerHTML += `<div id="${idCarga}" class="mensaje-bot">Berus procesando...</div>`;
+    caja.innerHTML += `<div id="${idCarga}">Berus procesando...</div>`;
     caja.scrollTop = caja.scrollHeight;
 
     try {
@@ -73,50 +70,38 @@ async function enviarMensaje() {
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
             body: JSON.stringify({
                 model: "mistral-small-latest",
-                messages: [{ role: "system", content: "Eres Berus AI. Responde sin usar asteriscos. Tu equipo de creadores es Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
+                messages: [{ role: "system", content: "Eres Berus AI. Equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
             })
         });
         const data = await res.json();
-        let texto = data.choices[0].message.content.replace(/\*/g, '');
-        document.getElementById(idCarga).innerHTML = `<strong>Berus:</strong> ${texto}`;
-        historialTotal.push("Berus: " + texto);
+        document.getElementById(idCarga).innerHTML = `<strong>Berus:</strong> ${data.choices[0].message.content}`;
     } catch (e) {
-        document.getElementById(idCarga).innerText = "Error de conexión con el núcleo.";
+        document.getElementById(idCarga).innerText = "Error de conexión.";
     }
     caja.scrollTop = caja.scrollHeight;
 }
 
 function mostrarPreguntaAvanzada() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> ¿Deseas generar una prueba de avance multimedia?<br><br><button onclick="mostrarOpcionesAB()">SÍ, GENERAR</button></div>`;
+    caja.innerHTML += `<div><strong>Berus:</strong> ¿Generar avance?<br><br><button onclick="mostrarOpcionesAB()">SÍ, GENERAR</button></div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
 function mostrarOpcionesAB() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Selecciona el protocolo:<br><br><button onclick="procesarVideo('a')">Opción (a)</button> <button onclick="procesarVideo('b')">Opción (b)</button></div>`;
+    caja.innerHTML += `<div><button onclick="procesarVideo('a')">Opción (a)</button> <button onclick="procesarVideo('b')">Opción (b)</button></div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
 function procesarVideo(op) {
     const caja = document.getElementById('caja-chat');
     const idTemp = "temp-" + Date.now();
-    caja.innerHTML += `<div id="${idTemp}" class="mensaje-bot generando-txt">Generando video... por favor espera 15 segundos.</div>`;
-    caja.scrollTop = caja.scrollHeight;
-
+    caja.innerHTML += `<div id="${idTemp}" class="generando-txt">Generando video... espera 15s.</div>`;
+    
     setTimeout(() => {
-        const msgTemp = document.getElementById(idTemp);
-        if (msgTemp) msgTemp.remove();
-
+        document.getElementById(idTemp).remove();
         let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
-
-        caja.innerHTML += `
-            <div class="mensaje-bot">
-                <strong>Berus:</strong> Generación completa.<br>
-                <video width="100%" controls style="border-radius:10px; margin-top:10px;">
-                    <source src="${videoSrc}" type="video/mp4">
-                </video>
-            </div>`;
+        caja.innerHTML += `<div><strong>Berus:</strong> Generado:<br><video width="100%" controls style="border-radius:10px;"><source src="./${videoSrc}" type="video/mp4"></video></div>`;
         caja.scrollTop = caja.scrollHeight;
     }, 15000);
 }
@@ -125,7 +110,7 @@ function verBoveda() {
     document.getElementById('pantalla-chat').classList.add('oculto');
     document.getElementById('pantalla-admin').classList.remove('oculto');
     document.getElementById('lista-cuentas').innerHTML = usuariosDB.map(u => `<p>📧 ${u.correo} | 🔑 ${u.pass}</p>`).join('');
-    document.getElementById('registro-chat-admin').innerHTML = historialTotal.map(h => `<p style="font-size:11px; border-bottom:1px solid #333;">${h}</p>`).join('');
+    document.getElementById('registro-chat-admin').innerHTML = historialTotal.map(h => `<p>${h}</p>`).join('');
 }
 
 function volver() {
