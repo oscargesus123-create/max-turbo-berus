@@ -7,7 +7,7 @@ body, html {
 #video-intro { 
     position: fixed; top: 0; left: 0;
     width: 100%; height: 100%; 
-    object-fit: cover; /* Esto hace que el video llene toda la pantalla sin deformarse */
+    object-fit: cover; 
     z-index: -100; filter: brightness(0.7); 
 }
 
@@ -19,7 +19,7 @@ body, html {
 .oculto-fade { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 1.5s ease; }
 .visible-fade { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-.card-inicio, .card-admin { 
+.card-inicio { 
     background: rgba(0, 0, 0, 0.7); padding: 40px; 
     border-radius: 25px; backdrop-filter: blur(10px); 
     border: 2px solid #32cd32; text-align: center; 
