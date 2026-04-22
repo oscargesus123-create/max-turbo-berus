@@ -3,20 +3,15 @@ const API_KEY = "KuN01v9kDmX5Ibh57Taowq7btGd5Hsz7";
 const videoIntro = document.getElementById('video-intro');
 const infoInicio = document.getElementById('info-inicio');
 
-// --- ACTIVADOR DE INTRO ---
+// ARRANQUE FORZADO DEL VIDEO
 if (videoIntro) {
-    videoIntro.load();
-    
-    // Intenta darle "Play" automáticamente
-    let playInterval = setInterval(() => {
-        videoIntro.play().then(() => {
-            clearInterval(playInterval);
-        }).catch(() => {
-            console.log("Esperando carga de video...");
-        });
-    }, 500);
+    videoIntro.play().catch(() => {
+        // Si el navegador lo bloquea, lo intentamos al primer toque en la pantalla
+        document.body.addEventListener('click', () => {
+            videoIntro.play();
+        }, { once: true });
+    });
 
-    // Si el video termina, muestra el mensaje
     videoIntro.onended = () => {
         infoInicio.classList.remove('oculto-fade');
         infoInicio.classList.add('visible-fade');
@@ -29,12 +24,8 @@ function irAlRegistro() {
 }
 
 function registrar() {
-    const correo = document.getElementById('correo').value;
-    const pass = document.getElementById('pass').value;
-    if (correo && pass) {
-        document.getElementById('pantalla-registro').classList.add('oculto');
-        document.getElementById('pantalla-chat').classList.remove('oculto');
-    }
+    document.getElementById('pantalla-registro').classList.add('oculto');
+    document.getElementById('pantalla-chat').classList.remove('oculto');
 }
 
 async function enviarMensaje() {
@@ -47,20 +38,20 @@ async function enviarMensaje() {
     pInput.value = '';
 
     if (p.toLowerCase().includes("avance")) {
-        caja.innerHTML += `<div><strong>Berus:</strong> ¿Generar prueba multimedia?<br><button onclick="procesarVideo('a')">Opción A</button> <button onclick="procesarVideo('b')">Opción B</button></div>`;
+        caja.innerHTML += `<div><strong>Berus:</strong> Generando avance multimedia...<br><button onclick="procesarVideo('a')">Ver Opción A</button> <button onclick="procesarVideo('b')">Ver Opción B</button></div>`;
         return;
     }
 
     const idCarga = "c-" + Date.now();
     caja.innerHTML += `<div id="${idCarga}">Berus procesando...</div>`;
-    
+
     try {
         const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
             method: "POST",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
             body: JSON.stringify({
                 model: "mistral-small-latest",
-                messages: [{ role: "system", content: "Eres Berus AI. Creado por Oscar Jesús y su equipo." }, { role: "user", content: p }]
+                messages: [{ role: "user", content: p }]
             })
         });
         const data = await res.json();
@@ -72,12 +63,6 @@ async function enviarMensaje() {
 
 function procesarVideo(op) {
     const caja = document.getElementById('caja-chat');
-    const idTemp = "temp-" + Date.now();
-    caja.innerHTML += `<div id="${idTemp}">Generando (15s)...</div>`;
-    
-    setTimeout(() => {
-        document.getElementById(idTemp).remove();
-        let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
-        caja.innerHTML += `<div><strong>Berus:</strong> Listo:<br><video width="100%" controls><source src="${videoSrc}" type="video/mp4"></video></div>`;
-    }, 15000);
+    let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
+    caja.innerHTML += `<div><video width="100%" controls><source src="${videoSrc}" type="video/mp4"></video></div>`;
 }
