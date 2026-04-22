@@ -8,14 +8,15 @@
 </head>
 <body>
 
-    <div id="pantalla-inicio">
-        <div class="contenedor-dragon">
-            <img src="dragon.jpeg" id="logo-dragon" alt="Dragon Max Turbo">
-        </div>
-        <div class="card-inicio">
+    <div id="contenedor-principal">
+        <video id="video-intro" autoplay muted playsinline>
+            <source src="AhaTok_professionnel_intro_1776836378082.mp4" type="video/mp4">
+        </video>
+
+        <div id="info-inicio" class="card-inicio oculto-fade">
             <h1>BERUS AI</h1>
             <p class="resumen">
-                Bienvenido a la inteligencia oficial de <strong>Max Turbo</strong>. 
+                Bienvenido a la inteligencia oficial de Max Turbo. 
                 Berus es un asistente avanzado diseñado para gestionar proyectos, 
                 responder dudas del equipo y evolucionar hacia el futuro multimedia.
             </p>
@@ -26,7 +27,6 @@
     <div id="pantalla-registro" class="oculto">
         <div class="card-inicio">
             <h2>Registro de Usuario</h2>
-            <p style="font-size: 0.8rem; color: #ccc;">Crea una cuenta para acceder al chat</p>
             <input type="email" id="correo" placeholder="Correo Electrónico">
             <input type="password" id="pass" placeholder="Contraseña">
             <button onclick="registrar()">REGISTRAR Y ENTRAR</button>
@@ -36,20 +36,19 @@
     <div id="pantalla-chat" class="oculto">
         <div id="caja-chat"></div>
         <div class="entrada-chat">
-            <input type="text" id="pregunta" placeholder="Escribe a Berus o usa un comando...">
+            <input type="text" id="pregunta" placeholder="Escribe a Berus...">
             <button onclick="enviarMensaje()">Enviar</button>
         </div>
     </div>
 
     <div id="pantalla-admin" class="oculto">
         <div class="card-admin">
-            <h2>🛡️ Bóveda de Seguridad</h2>
-            <div id="lista-cuentas" style="text-align:left; margin-bottom: 20px;"></div>
+            <h2>Bóveda de Seguridad</h2>
+            <div id="lista-cuentas"></div>
             <hr>
-            <h3>📑 Registro de Conversaciones</h3>
             <div id="registro-chat-admin"></div>
             <br>
-            <button onclick="volver()" style="background:gray;">VOLVER AL CHAT</button>
+            <button onclick="volver()" style="background:gray;">VOLVER</button>
         </div>
     </div>
 
