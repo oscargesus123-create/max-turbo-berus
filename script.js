@@ -4,18 +4,18 @@ const PASS_ADMIN = "tejuaberus";
 let usuariosDB = JSON.parse(localStorage.getItem('cuentas_berus')) || [];
 let historialTotal = JSON.parse(localStorage.getItem('historial_berus')) || [];
 
-// 1. DETECTAR FIN DE VIDEO INTRO Y FORZAR CARGA
+// --- LÓGICA DE LA INTRO ---
 const videoIntro = document.getElementById('video-intro');
 const infoInicio = document.getElementById('info-inicio');
 
 if (videoIntro) {
-    // Forzar play por si el navegador lo detiene
-    window.addEventListener('load', () => {
-        videoIntro.play().catch(() => {
-            console.log("Esperando interacción para reproducir");
-        });
+    // Forzar carga al abrir
+    window.addEventListener('DOMContentLoaded', () => {
+        videoIntro.load();
+        videoIntro.play().catch(e => console.log("Auto-play esperando interacción"));
     });
 
+    // Si el video termina, mostrar la info
     videoIntro.onended = () => {
         infoInicio.classList.remove('oculto-fade');
         infoInicio.classList.add('visible-fade');
@@ -70,7 +70,7 @@ async function enviarMensaje() {
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
             body: JSON.stringify({
                 model: "mistral-small-latest",
-                messages: [{ role: "system", content: "Eres Berus AI. Responde sin asteriscos. Tu equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
+                messages: [{ role: "system", content: "Eres Berus AI. Responde sin asteriscos. Equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
             })
         });
         const data = await res.json();
@@ -91,7 +91,7 @@ function mostrarPreguntaAvanzada() {
 
 function mostrarOpcionesAB() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Selecciona el protocolo:<br><br><button onclick="procesarVideo('a')">Opción (a)</button> <small>Maduro bailando</small><br><button onclick="procesarVideo('b')">Opción (b)</button> <small>Video Stephanie Autopista</small></div>`;
+    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Selecciona el protocolo:<br><br><button onclick="procesarVideo('a')">Opción (a)</button> <small>King Nasir</small><br><button onclick="procesarVideo('b')">Opción (b)</button> <small>Stephanie Autopista</small></div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
@@ -106,13 +106,11 @@ function procesarVideo(op) {
         if (msgTemp) msgTemp.remove();
 
         let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
-        let desc = (op === 'a') ? "Maduro bailando como King Nasir" : "Letras Stephanie - Autopista Ciudad";
+        let desc = (op === 'a') ? "Resultado Opción A" : "Resultado Opción B";
 
-        // SE QUITÓ EL AUTOPLAY AQUÍ PARA QUE NO SE REPRODUZCA SOLO
         caja.innerHTML += `
             <div class="mensaje-bot">
                 <strong>Berus:</strong> Generación completa.<br>
-                <small>${desc}</small><br>
                 <video width="100%" controls style="border-radius:10px; margin-top:10px;">
                     <source src="${videoSrc}" type="video/mp4">
                 </video>
