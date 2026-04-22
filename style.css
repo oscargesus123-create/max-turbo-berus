@@ -1,48 +1,33 @@
 body, html { 
     margin: 0; padding: 0; width: 100%; height: 100%; 
-    background: #000; color: white; font-family: 'Arial', sans-serif; 
+    background: radial-gradient(circle, #0f1a0f 0%, #000 100%); 
+    color: white; font-family: 'Segoe UI', sans-serif; 
     overflow: hidden; 
 }
 
-#video-intro { 
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%; 
-    object-fit: cover; 
-    z-index: -100; filter: brightness(0.7); 
+#contenedor-principal { display: flex; justify-content: center; align-items: center; height: 100vh; }
+
+.card-inicio { 
+    background: rgba(0, 0, 0, 0.8); padding: 40px; 
+    border-radius: 25px; border: 2px solid #32cd32; 
+    text-align: center; width: 85%; max-width: 450px;
+    box-shadow: 0 0 15px rgba(50, 205, 50, 0.3);
 }
-
-#contenedor-principal { 
-    display: flex; justify-content: center; align-items: center; 
-    height: 100vh; width: 100vw; 
-}
-
-.oculto-fade { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 1.5s ease; }
-.visible-fade { opacity: 1; pointer-events: auto; transform: scale(1); }
-
-.card-inicio, .card-admin { 
-    background: rgba(0, 0, 0, 0.7); padding: 40px; 
-    border-radius: 25px; backdrop-filter: blur(10px); 
-    border: 2px solid #32cd32; text-align: center; 
-    width: 85%; max-width: 450px; 
-}
-
-.generando-txt { color: #32cd32; font-weight: bold; font-style: italic; animation: parpadeo 1.5s infinite; }
-@keyframes parpadeo { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
 .oculto { display: none !important; }
 
 #caja-chat { 
-    width: 90%; height: 60vh; background: rgba(0,0,0,0.6); 
-    padding: 15px; border-radius: 15px; overflow-y: auto; margin-bottom: 10px; 
+    width: 90%; max-width: 600px; height: 65vh; 
+    background: rgba(0,0,0,0.8); border: 1px solid #333;
+    padding: 15px; border-radius: 15px; overflow-y: auto; 
+    margin: 20px auto;
 }
 
-button { 
-    background: #32cd32; color: black; border: none; 
-    padding: 12px 25px; border-radius: 8px; cursor: pointer; 
-    font-weight: bold; margin: 5px; 
-}
+.mensaje-bot { background: #1a1a1a; padding: 12px; border-radius: 12px; margin: 8px 0; border-left: 4px solid #32cd32; }
+.mensaje-user { text-align: right; color: #32cd32; margin: 10px 0; font-weight: bold; }
 
-input { 
-    padding: 12px; background: #111; color: white; 
-    border: 1px solid #333; border-radius: 8px; width: 80%; 
-}
+.generando-txt { color: #32cd32; font-style: italic; animation: parpadeo 1s infinite; }
+@keyframes parpadeo { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+button { background: #32cd32; color: black; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+input { flex-grow: 1; padding: 12px; background: #111; color: white; border: 1px solid #333; border-radius: 8px; }
