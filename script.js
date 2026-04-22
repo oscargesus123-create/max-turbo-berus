@@ -4,11 +4,18 @@ const PASS_ADMIN = "tejuaberus";
 let usuariosDB = JSON.parse(localStorage.getItem('cuentas_berus')) || [];
 let historialTotal = JSON.parse(localStorage.getItem('historial_berus')) || [];
 
-// DETECTAR FIN DE VIDEO INTRO
+// 1. DETECTAR FIN DE VIDEO INTRO Y FORZAR CARGA
 const videoIntro = document.getElementById('video-intro');
 const infoInicio = document.getElementById('info-inicio');
 
 if (videoIntro) {
+    // Forzar play por si el navegador lo detiene
+    window.addEventListener('load', () => {
+        videoIntro.play().catch(() => {
+            console.log("Esperando interacción para reproducir");
+        });
+    });
+
     videoIntro.onended = () => {
         infoInicio.classList.remove('oculto-fade');
         infoInicio.classList.add('visible-fade');
@@ -38,7 +45,6 @@ async function enviarMensaje() {
 
     const caja = document.getElementById('caja-chat');
     
-    // PANEL SECRETO
     if (p.toLowerCase() === "berus panel") {
         const check = prompt("Acceso Administrador:");
         if (check === PASS_ADMIN) { verBoveda(); pInput.value = ''; return; }
@@ -49,7 +55,6 @@ async function enviarMensaje() {
     localStorage.setItem('historial_berus', JSON.stringify(historialTotal));
     pInput.value = '';
 
-    // LÓGICA DE AVANCES
     if (p.toLowerCase().includes("avance") || p.toLowerCase().includes("actualización")) {
         mostrarPreguntaAvanzada();
         return;
@@ -65,7 +70,7 @@ async function enviarMensaje() {
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
             body: JSON.stringify({
                 model: "mistral-small-latest",
-                messages: [{ role: "system", content: "Eres Berus AI. Responde sin asteriscos ni símbolos. Tu equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
+                messages: [{ role: "system", content: "Eres Berus AI. Responde sin asteriscos. Tu equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
             })
         });
         const data = await res.json();
@@ -103,7 +108,15 @@ function procesarVideo(op) {
         let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
         let desc = (op === 'a') ? "Maduro bailando como King Nasir" : "Letras Stephanie - Autopista Ciudad";
 
-        caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Generación completa.<br><small>${desc}</small><br><video width="100%" controls style="border-radius:10px; margin-top:10px;"><source src="${videoSrc}" type="video/mp4"></video></div>`;
+        // SE QUITÓ EL AUTOPLAY AQUÍ PARA QUE NO SE REPRODUZCA SOLO
+        caja.innerHTML += `
+            <div class="mensaje-bot">
+                <strong>Berus:</strong> Generación completa.<br>
+                <small>${desc}</small><br>
+                <video width="100%" controls style="border-radius:10px; margin-top:10px;">
+                    <source src="${videoSrc}" type="video/mp4">
+                </video>
+            </div>`;
         caja.scrollTop = caja.scrollHeight;
     }, 15000);
 }
