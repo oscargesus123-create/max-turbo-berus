@@ -1,11 +1,22 @@
 const API_KEY = "KuN01v9kDmX5Ibh57Taowq7btGd5Hsz7";
-const PASS_ADMIN_SISTEMA = "tejuaberus"; // Tu clave para el panel
+const PASS_ADMIN = "tejuaberus";
 
 let usuariosDB = JSON.parse(localStorage.getItem('cuentas_berus')) || [];
 let historialTotal = JSON.parse(localStorage.getItem('historial_berus')) || [];
 
+// DETECTAR FIN DE VIDEO INTRO
+const videoIntro = document.getElementById('video-intro');
+const infoInicio = document.getElementById('info-inicio');
+
+if (videoIntro) {
+    videoIntro.onended = () => {
+        infoInicio.classList.remove('oculto-fade');
+        infoInicio.classList.add('visible-fade');
+    };
+}
+
 function irAlRegistro() {
-    document.getElementById('pantalla-inicio').classList.add('oculto');
+    document.getElementById('contenedor-principal').classList.add('oculto');
     document.getElementById('pantalla-registro').classList.remove('oculto');
 }
 
@@ -17,8 +28,6 @@ function registrar() {
         localStorage.setItem('cuentas_berus', JSON.stringify(usuariosDB));
         document.getElementById('pantalla-registro').classList.add('oculto');
         document.getElementById('pantalla-chat').classList.remove('oculto');
-    } else {
-        alert("Completa los datos de registro");
     }
 }
 
@@ -29,29 +38,25 @@ async function enviarMensaje() {
 
     const caja = document.getElementById('caja-chat');
     
-    // --- COMANDO SECRETO PANEL ---
+    // PANEL SECRETO
     if (p.toLowerCase() === "berus panel") {
-        const check = prompt("ACCESO RESTRINGIDO: Ingresa la contraseña Maestra:");
-        if (check === PASS_ADMIN_SISTEMA) {
-            pInput.value = '';
-            verBoveda();
-            return;
-        } else {
-            alert("CLAVE INCORRECTA");
-            pInput.value = '';
-            return;
-        }
+        const check = prompt("Acceso Administrador:");
+        if (check === PASS_ADMIN) { verBoveda(); pInput.value = ''; return; }
     }
 
-    // Guardar historial
+    caja.innerHTML += `<div style="text-align:right; margin:10px;">Tú: ${p}</div>`;
     historialTotal.push("Usuario: " + p);
     localStorage.setItem('historial_berus', JSON.stringify(historialTotal));
-
-    caja.innerHTML += `<div style="margin:10px; text-align:right;"><strong>Tú:</strong> ${p}</div>`;
     pInput.value = '';
 
+    // LÓGICA DE AVANCES
+    if (p.toLowerCase().includes("avance") || p.toLowerCase().includes("actualización")) {
+        mostrarPreguntaAvanzada();
+        return;
+    }
+
     const idCarga = "c-" + Date.now();
-    caja.innerHTML += `<div id="${idCarga}" class="mensaje-bot">Berus escribiendo...</div>`;
+    caja.innerHTML += `<div id="${idCarga}" class="mensaje-bot">Berus procesando...</div>`;
     caja.scrollTop = caja.scrollHeight;
 
     try {
@@ -60,65 +65,54 @@ async function enviarMensaje() {
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
             body: JSON.stringify({
                 model: "mistral-small-latest",
-                messages: [
-                    { role: "system", content: "Eres Berus AI de Max Turbo. En tu próxima actualización podrás crear imágenes, videos y combinar músicas. Tu equipo es Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris. Creado por Óscar Sánchez." }, 
-                    { role: "user", content: p }
-                ]
+                messages: [{ role: "system", content: "Eres Berus AI. Responde sin asteriscos ni símbolos. Tu equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
             })
         });
         const data = await res.json();
-        const texto = data.choices[0].message.content;
-        
+        let texto = data.choices[0].message.content.replace(/\*/g, '');
         document.getElementById(idCarga).innerHTML = `<strong>Berus:</strong> ${texto}`;
         historialTotal.push("Berus: " + texto);
-        localStorage.setItem('historial_berus', JSON.stringify(historialTotal));
-
-        // Activar video si se habla de actualización
-        if (p.toLowerCase().includes("actualización") || p.toLowerCase().includes("avance")) {
-            setTimeout(mostrarOpcionesAvance, 1000);
-        }
-
     } catch (e) {
-        document.getElementById(idCarga).innerText = "Error de conexión con el núcleo de Berus.";
+        document.getElementById(idCarga).innerText = "Error de red.";
     }
     caja.scrollTop = caja.scrollHeight;
 }
 
-function mostrarOpcionesAvance() {
+function mostrarPreguntaAvanzada() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `
-        <div class="mensaje-bot" style="border-color: gold;">
-            <strong>NUEVA ACTUALIZACIÓN:</strong> ¿Quieres ver un avance de la generación de video y música?
-            <br><br>
-            <button onclick="verVideosAvance()">SÍ, MOSTRAR</button>
-            <button onclick="this.parentElement.remove()" style="background:gray;">NO</button>
-        </div>`;
+    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> ¿Deseas generar una prueba de avance multimedia?<br><br><button onclick="mostrarOpcionesAB()">SÍ, GENERAR</button></div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
-function verVideosAvance() {
+function mostrarOpcionesAB() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `
-        <div class="mensaje-bot" style="border-color: gold;">
-            <strong>VIDEO 1:</strong> Maduro bailando (Generación IA)<br>
-            <video width="100%" controls style="border-radius:8px; margin-top:5px;"><source src="maduro.mp4" type="video/mp4"></video>
-            <br><br>
-            <strong>VIDEO 2:</strong> Música de Stephanie (Fondo autopista)<br>
-            <video width="100%" controls style="border-radius:8px; margin-top:5px;"><source src="musica.mp4" type="video/mp4"></video>
-        </div>`;
+    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Selecciona el protocolo:<br><br><button onclick="procesarVideo('a')">Opción (a)</button> <small>Maduro bailando</small><br><button onclick="procesarVideo('b')">Opción (b)</button> <small>Video Stephanie Autopista</small></div>`;
     caja.scrollTop = caja.scrollHeight;
+}
+
+function procesarVideo(op) {
+    const caja = document.getElementById('caja-chat');
+    const idTemp = "temp-" + Date.now();
+    caja.innerHTML += `<div id="${idTemp}" class="mensaje-bot generando-txt">Generando video... por favor espera 15 segundos.</div>`;
+    caja.scrollTop = caja.scrollHeight;
+
+    setTimeout(() => {
+        const msgTemp = document.getElementById(idTemp);
+        if (msgTemp) msgTemp.remove();
+
+        let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
+        let desc = (op === 'a') ? "Maduro bailando como King Nasir" : "Letras Stephanie - Autopista Ciudad";
+
+        caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Generación completa.<br><small>${desc}</small><br><video width="100%" controls autoplay style="border-radius:10px; margin-top:10px;"><source src="${videoSrc}" type="video/mp4"></video></div>`;
+        caja.scrollTop = caja.scrollHeight;
+    }, 15000);
 }
 
 function verBoveda() {
     document.getElementById('pantalla-chat').classList.add('oculto');
     document.getElementById('pantalla-admin').classList.remove('oculto');
-    
-    const listaC = document.getElementById('lista-cuentas');
-    listaC.innerHTML = "<h4>Cuentas en Base de Datos:</h4>";
-    listaC.innerHTML += usuariosDB.map(u => `<p style="color:#00fbff; font-size:12px;">📧 ${u.correo} | 🔑 ${u.pass}</p>`).join('');
-    
-    const listaH = document.getElementById('registro-chat-admin');
-    listaH.innerHTML = historialTotal.map(h => `<p style="border-bottom:1px solid #222; padding:3px;">${h}</p>`).join('');
+    document.getElementById('lista-cuentas').innerHTML = usuariosDB.map(u => `<p>📧 ${u.correo} | 🔑 ${u.pass}</p>`).join('');
+    document.getElementById('registro-chat-admin').innerHTML = historialTotal.map(h => `<p style="font-size:11px; border-bottom:1px solid #333;">${h}</p>`).join('');
 }
 
 function volver() {
