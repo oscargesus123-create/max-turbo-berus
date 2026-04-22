@@ -5,9 +5,10 @@ body, html {
 }
 
 #video-intro { 
-    position: fixed; right: 0; bottom: 0; 
-    min-width: 100%; min-height: 100%; 
-    z-index: -100; filter: brightness(0.6); 
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%; 
+    object-fit: cover; /* Esto hace que el video llene toda la pantalla sin deformarse */
+    z-index: -100; filter: brightness(0.7); 
 }
 
 #contenedor-principal { 
@@ -15,7 +16,7 @@ body, html {
     height: 100vh; width: 100vw; 
 }
 
-.oculto-fade { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 1.2s ease; }
+.oculto-fade { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 1.5s ease; }
 .visible-fade { opacity: 1; pointer-events: auto; transform: scale(1); }
 
 .card-inicio, .card-admin { 
