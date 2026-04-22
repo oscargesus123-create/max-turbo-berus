@@ -19,7 +19,7 @@ body, html {
 .oculto-fade { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 1.5s ease; }
 .visible-fade { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-.card-inicio { 
+.card-inicio, .card-admin { 
     background: rgba(0, 0, 0, 0.7); padding: 40px; 
     border-radius: 25px; backdrop-filter: blur(10px); 
     border: 2px solid #32cd32; text-align: center; 
