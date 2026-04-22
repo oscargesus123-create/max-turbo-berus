@@ -4,18 +4,21 @@ const PASS_ADMIN = "tejuaberus";
 let usuariosDB = JSON.parse(localStorage.getItem('cuentas_berus')) || [];
 let historialTotal = JSON.parse(localStorage.getItem('historial_berus')) || [];
 
-// --- LÓGICA DE LA INTRO ---
+// --- LÓGICA DE LA INTRO REFORZADA ---
 const videoIntro = document.getElementById('video-intro');
 const infoInicio = document.getElementById('info-inicio');
 
 if (videoIntro) {
-    // Forzar carga al abrir
-    window.addEventListener('DOMContentLoaded', () => {
-        videoIntro.load();
-        videoIntro.play().catch(e => console.log("Auto-play esperando interacción"));
+    // Intentar reproducir en cuanto cargue la página
+    window.addEventListener('load', () => {
+        videoIntro.muted = true; // Asegurar que esté silenciado para que el navegador lo deje arrancar
+        videoIntro.play().catch(error => {
+            console.log("Reproducción automática bloqueada. Reintentando...");
+            // Si falla, creamos un evento para que arranque al primer clic del usuario en cualquier parte
+            document.body.addEventListener('click', () => { videoIntro.play(); }, {once: true});
+        });
     });
 
-    // Si el video termina, mostrar la info
     videoIntro.onended = () => {
         infoInicio.classList.remove('oculto-fade');
         infoInicio.classList.add('visible-fade');
@@ -70,7 +73,7 @@ async function enviarMensaje() {
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
             body: JSON.stringify({
                 model: "mistral-small-latest",
-                messages: [{ role: "system", content: "Eres Berus AI. Responde sin asteriscos. Equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
+                messages: [{ role: "system", content: "Eres Berus AI. Responde sin usar asteriscos. Tu equipo de creadores es Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
             })
         });
         const data = await res.json();
@@ -78,7 +81,7 @@ async function enviarMensaje() {
         document.getElementById(idCarga).innerHTML = `<strong>Berus:</strong> ${texto}`;
         historialTotal.push("Berus: " + texto);
     } catch (e) {
-        document.getElementById(idCarga).innerText = "Error de red.";
+        document.getElementById(idCarga).innerText = "Error de conexión con el núcleo.";
     }
     caja.scrollTop = caja.scrollHeight;
 }
@@ -91,7 +94,7 @@ function mostrarPreguntaAvanzada() {
 
 function mostrarOpcionesAB() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Selecciona el protocolo:<br><br><button onclick="procesarVideo('a')">Opción (a)</button> <small>King Nasir</small><br><button onclick="procesarVideo('b')">Opción (b)</button> <small>Stephanie Autopista</small></div>`;
+    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Selecciona el protocolo:<br><br><button onclick="procesarVideo('a')">Opción (a)</button> <button onclick="procesarVideo('b')">Opción (b)</button></div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
@@ -106,7 +109,6 @@ function procesarVideo(op) {
         if (msgTemp) msgTemp.remove();
 
         let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
-        let desc = (op === 'a') ? "Resultado Opción A" : "Resultado Opción B";
 
         caja.innerHTML += `
             <div class="mensaje-bot">
