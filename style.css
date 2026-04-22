@@ -4,7 +4,6 @@ body, html {
     overflow: hidden; 
 }
 
-/* VIDEO FONDO PANTALLA COMPLETA */
 #video-intro { 
     position: fixed; right: 0; bottom: 0; 
     min-width: 100%; min-height: 100%; 
@@ -16,7 +15,6 @@ body, html {
     height: 100vh; width: 100vw; 
 }
 
-/* EFECTO DE APARICIÓN */
 .oculto-fade { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 1.2s ease; }
 .visible-fade { opacity: 1; pointer-events: auto; transform: scale(1); }
 
@@ -27,7 +25,6 @@ body, html {
     width: 85%; max-width: 450px; 
 }
 
-/* CARGA DE VIDEOS */
 .generando-txt { color: #32cd32; font-weight: bold; font-style: italic; animation: parpadeo 1.5s infinite; }
 @keyframes parpadeo { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
