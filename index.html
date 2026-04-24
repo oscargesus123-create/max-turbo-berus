@@ -9,11 +9,17 @@
 <body>
 
     <div id="contenedor-principal">
-        <div id="info-inicio" class="card-inicio">
+        <video id="video-intro" autoplay muted playsinline preload="auto">
+            <source src="intro.mp4" type="video/mp4">
+            Tu navegador no soporta el video.
+        </video>
+
+        <div id="info-inicio" class="card-inicio oculto-fade">
             <h1>BERUS AI</h1>
             <p class="resumen">
-                Núcleo de inteligencia oficial de **Max Turbo**. 
-                Sistema de gestión avanzado desarrollado por Oscar Jesús y su equipo.
+                Bienvenido a la inteligencia oficial de Max Turbo. 
+                Berus es un asistente avanzado diseñado para gestionar proyectos, 
+                responder dudas del equipo y evolucionar hacia el futuro multimedia.
             </p>
             <button onclick="irAlRegistro()">INICIAR SISTEMA</button>
         </div>
@@ -21,7 +27,7 @@
 
     <div id="pantalla-registro" class="oculto">
         <div class="card-inicio">
-            <h2>Registro de Acceso</h2>
+            <h2>Registro de Usuario</h2>
             <input type="email" id="correo" placeholder="Correo Electrónico">
             <input type="password" id="pass" placeholder="Contraseña">
             <button onclick="registrar()">REGISTRAR Y ENTRAR</button>
@@ -29,11 +35,21 @@
     </div>
 
     <div id="pantalla-chat" class="oculto">
-        <div class="header-chat">MAX TURBO - MODULO MULTIMEDIA ACTIVO</div>
         <div id="caja-chat"></div>
         <div class="entrada-chat">
-            <input type="text" id="pregunta" placeholder="Escribe 'avances' para ver videos...">
-            <button onclick="enviarMensaje()">ENVIAR</button>
+            <input type="text" id="pregunta" placeholder="Escribe a Berus...">
+            <button onclick="enviarMensaje()">Enviar</button>
+        </div>
+    </div>
+
+    <div id="pantalla-admin" class="oculto">
+        <div class="card-admin">
+            <h2>Bóveda de Seguridad</h2>
+            <div id="lista-cuentas"></div>
+            <hr>
+            <div id="registro-chat-admin"></div>
+            <br>
+            <button onclick="volver()" style="background:gray;">VOLVER</button>
         </div>
     </div>
 
