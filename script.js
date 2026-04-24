@@ -4,23 +4,13 @@ const PASS_ADMIN = "tejuaberus";
 let usuariosDB = JSON.parse(localStorage.getItem('cuentas_berus')) || [];
 let historialTotal = JSON.parse(localStorage.getItem('historial_berus')) || [];
 
-// 1. DETECTAR FIN DE VIDEO INTRO Y FORZAR CARGA
-const videoIntro = document.getElementById('video-intro');
-const infoInicio = document.getElementById('info-inicio');
-
-if (videoIntro) {
-    // Forzar play por si el navegador lo detiene
-    window.addEventListener('load', () => {
-        videoIntro.play().catch(() => {
-            console.log("Esperando interacción para reproducir");
-        });
-    });
-
-    videoIntro.onended = () => {
-        infoInicio.classList.remove('oculto-fade');
-        infoInicio.classList.add('visible-fade');
-    };
-}
+// ESCUCHAR TECLA ENTER
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        if (!document.getElementById('pantalla-registro').classList.contains('oculto')) registrar();
+        else if (!document.getElementById('pantalla-chat').classList.contains('oculto')) enviarMensaje();
+    }
+});
 
 function irAlRegistro() {
     document.getElementById('contenedor-principal').classList.add('oculto');
@@ -28,8 +18,8 @@ function irAlRegistro() {
 }
 
 function registrar() {
-    const correo = document.getElementById('correo').value;
-    const pass = document.getElementById('pass').value;
+    const correo = document.getElementById('correo').value.trim();
+    const pass = document.getElementById('pass').value.trim();
     if (correo && pass) {
         usuariosDB.push({ correo, pass });
         localStorage.setItem('cuentas_berus', JSON.stringify(usuariosDB));
@@ -50,7 +40,7 @@ async function enviarMensaje() {
         if (check === PASS_ADMIN) { verBoveda(); pInput.value = ''; return; }
     }
 
-    caja.innerHTML += `<div style="text-align:right; margin:10px;">Tú: ${p}</div>`;
+    caja.innerHTML += `<div class="mensaje-user">Tú: ${p}</div>`;
     historialTotal.push("Usuario: " + p);
     localStorage.setItem('historial_berus', JSON.stringify(historialTotal));
     pInput.value = '';
@@ -78,42 +68,36 @@ async function enviarMensaje() {
         document.getElementById(idCarga).innerHTML = `<strong>Berus:</strong> ${texto}`;
         historialTotal.push("Berus: " + texto);
     } catch (e) {
-        document.getElementById(idCarga).innerText = "Error de red.";
+        document.getElementById(idCarga).innerText = "Error de conexión.";
     }
     caja.scrollTop = caja.scrollHeight;
 }
 
 function mostrarPreguntaAvanzada() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> ¿Deseas generar una prueba de avance multimedia?<br><br><button onclick="mostrarOpcionesAB()">SÍ, GENERAR</button></div>`;
+    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> ¿Deseas generar prueba multimedia?<br><br><button onclick="mostrarOpcionesAB()">SÍ, GENERAR</button></div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
 function mostrarOpcionesAB() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Selecciona el protocolo:<br><br><button onclick="procesarVideo('a')">Opción (a)</button> <small>Maduro bailando</small><br><button onclick="procesarVideo('b')">Opción (b)</button> <small>Video Stephanie Autopista</small></div>`;
+    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Protocolos disponibles:<br><br><button onclick="procesarVideo('a')">Opción (a)</button><br><button onclick="procesarVideo('b')">Opción (b)</button></div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
 function procesarVideo(op) {
     const caja = document.getElementById('caja-chat');
     const idTemp = "temp-" + Date.now();
-    caja.innerHTML += `<div id="${idTemp}" class="mensaje-bot generando-txt">Generando video... por favor espera 15 segundos.</div>`;
+    caja.innerHTML += `<div id="${idTemp}" class="mensaje-bot generando-txt">Generando video... espera 15s.</div>`;
     caja.scrollTop = caja.scrollHeight;
 
     setTimeout(() => {
-        const msgTemp = document.getElementById(idTemp);
-        if (msgTemp) msgTemp.remove();
-
+        if (document.getElementById(idTemp)) document.getElementById(idTemp).remove();
         let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
-        let desc = (op === 'a') ? "Maduro bailando como King Nasir" : "Letras Stephanie - Autopista Ciudad";
-
-        // SE QUITÓ EL AUTOPLAY AQUÍ PARA QUE NO SE REPRODUZCA SOLO
         caja.innerHTML += `
             <div class="mensaje-bot">
-                <strong>Berus:</strong> Generación completa.<br>
-                <small>${desc}</small><br>
-                <video width="100%" controls style="border-radius:10px; margin-top:10px;">
+                <strong>Berus:</strong> Video listo:<br>
+                <video class="video-avance" controls>
                     <source src="${videoSrc}" type="video/mp4">
                 </video>
             </div>`;
