@@ -33,7 +33,7 @@ body, html {
 .mensaje-user { text-align: right; color: #32cd32; margin: 10px 0; font-weight: bold; }
 
 .video-avance {
-    width: 100%; max-width: 280px; border-radius: 10px; margin-top: 10px; border: 1px solid #32cd32;
+    width: 100%; max-width: 280px; border-radius: 10px; margin-top: 10px; border: 1px solid #32cd32; display: block;
 }
 
 .entrada-chat { display: flex; justify-content: center; gap: 10px; width: 90%; max-width: 600px; margin: 0 auto; }
@@ -49,4 +49,3 @@ input {
     flex-grow: 1; padding: 12px; background: #111; color: white; 
     border: 1px solid #333; border-radius: 8px; outline: none;
 }
-input:focus { border-color: #32cd32; }
