@@ -4,11 +4,24 @@ const PASS_ADMIN = "tejuaberus";
 let usuariosDB = JSON.parse(localStorage.getItem('cuentas_berus')) || [];
 let historialTotal = JSON.parse(localStorage.getItem('historial_berus')) || [];
 
-// ESCUCHAR TECLA ENTER
+// ESCUCHAR TECLAS (ENTER y F)
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         if (!document.getElementById('pantalla-registro').classList.contains('oculto')) registrar();
         else if (!document.getElementById('pantalla-chat').classList.contains('oculto')) enviarMensaje();
+    }
+    
+    // Tecla F para Pantalla Completa del video
+    if (e.key.toLowerCase() === 'f') {
+        const videos = document.getElementsByTagName('video');
+        if (videos.length > 0) {
+            const ultimoVideo = videos[videos.length - 1];
+            if (!document.fullscreenElement) {
+                ultimoVideo.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
     }
 });
 
@@ -42,11 +55,10 @@ async function enviarMensaje() {
 
     caja.innerHTML += `<div class="mensaje-user">Tú: ${p}</div>`;
     historialTotal.push("Usuario: " + p);
-    localStorage.setItem('historial_berus', JSON.stringify(historialTotal));
     pInput.value = '';
 
     if (p.toLowerCase().includes("avance") || p.toLowerCase().includes("actualización")) {
-        mostrarPreguntaAvanzada();
+        mostrarOpcionesMultimedia();
         return;
     }
 
@@ -60,7 +72,7 @@ async function enviarMensaje() {
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
             body: JSON.stringify({
                 model: "mistral-small-latest",
-                messages: [{ role: "system", content: "Eres Berus AI. Responde sin asteriscos. Tu equipo: Oscar Jesús, Luis Ariel, Cesar Flores, Diego Santiago y Laura Iris." }, { role: "user", content: p }]
+                messages: [{ role: "system", content: "Eres Berus AI, creado por Oscar Neymar. Eres profesional y directo." }, { role: "user", content: p }]
             })
         });
         const data = await res.json();
@@ -73,22 +85,23 @@ async function enviarMensaje() {
     caja.scrollTop = caja.scrollHeight;
 }
 
-function mostrarPreguntaAvanzada() {
+function mostrarOpcionesMultimedia() {
     const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> ¿Deseas generar prueba multimedia?<br><br><button onclick="mostrarOpcionesAB()">SÍ, GENERAR</button></div>`;
-    caja.scrollTop = caja.scrollHeight;
-}
-
-function mostrarOpcionesAB() {
-    const caja = document.getElementById('caja-chat');
-    caja.innerHTML += `<div class="mensaje-bot"><strong>Berus:</strong> Protocolos disponibles:<br><br><button onclick="procesarVideo('a')">Opción (a)</button><br><button onclick="procesarVideo('b')">Opción (b)</button></div>`;
+    caja.innerHTML += `
+        <div class="mensaje-bot">
+            <strong>Berus:</strong> Protocolos multimedia detectados. Selecciona una opción para renderizar:<br><br>
+            <strong>Protocolo (A):</strong> Maduro bailando como King Nasir.<br>
+            <button onclick="procesarVideo('a')">EJECUTAR (A)</button><br><br>
+            <strong>Protocolo (B):</strong> Visuales Stephanie - Autopista Ciudad.<br>
+            <button onclick="procesarVideo('b')">EJECUTAR (B)</button>
+        </div>`;
     caja.scrollTop = caja.scrollHeight;
 }
 
 function procesarVideo(op) {
     const caja = document.getElementById('caja-chat');
     const idTemp = "temp-" + Date.now();
-    caja.innerHTML += `<div id="${idTemp}" class="mensaje-bot generando-txt">Generando video... espera 15s.</div>`;
+    caja.innerHTML += `<div id="${idTemp}" class="mensaje-bot generando-txt">Oscar Neymar está procesando el video... espera 15s.</div>`;
     caja.scrollTop = caja.scrollHeight;
 
     setTimeout(() => {
@@ -96,7 +109,7 @@ function procesarVideo(op) {
         let videoSrc = (op === 'a') ? "7114.mp4" : "7115.mp4";
         caja.innerHTML += `
             <div class="mensaje-bot">
-                <strong>Berus:</strong> Video listo:<br>
+                <strong>Berus:</strong> Renderizado finalizado. (Toca el video y presiona 'F' para pantalla completa).<br>
                 <video class="video-avance" controls>
                     <source src="${videoSrc}" type="video/mp4">
                 </video>
