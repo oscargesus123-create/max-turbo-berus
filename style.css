@@ -4,25 +4,18 @@ body, html {
     overflow: hidden; 
 }
 
-#video-intro { 
-    position: fixed; right: 0; bottom: 0; 
-    min-width: 100%; min-height: 100%; 
-    z-index: -100; filter: brightness(0.6); 
-}
-
 #contenedor-principal { 
     display: flex; justify-content: center; align-items: center; 
     height: 100vh; width: 100vw; 
+    background: radial-gradient(circle, #0a1a0a 0%, #000 100%);
 }
 
-.oculto-fade { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 1.2s ease; }
-.visible-fade { opacity: 1; pointer-events: auto; transform: scale(1); }
-
 .card-inicio, .card-admin { 
-    background: rgba(0, 0, 0, 0.7); padding: 40px; 
+    background: rgba(0, 0, 0, 0.85); padding: 40px; 
     border-radius: 25px; backdrop-filter: blur(10px); 
     border: 2px solid #32cd32; text-align: center; 
     width: 85%; max-width: 450px; 
+    box-shadow: 0 0 20px rgba(50, 205, 50, 0.2);
 }
 
 .generando-txt { color: #32cd32; font-weight: bold; font-style: italic; animation: parpadeo 1.5s infinite; }
@@ -31,17 +24,29 @@ body, html {
 .oculto { display: none !important; }
 
 #caja-chat { 
-    width: 90%; height: 60vh; background: rgba(0,0,0,0.6); 
-    padding: 15px; border-radius: 15px; overflow-y: auto; margin-bottom: 10px; 
+    width: 90%; max-width: 600px; height: 65vh; background: rgba(20,20,20,0.9); 
+    padding: 15px; border-radius: 15px; overflow-y: auto; margin: 20px auto;
+    border: 1px solid #333;
 }
+
+.mensaje-bot { background: #1a1a1a; padding: 12px; border-radius: 12px; margin: 8px 0; border-left: 4px solid #32cd32; text-align: left; }
+.mensaje-user { text-align: right; color: #32cd32; margin: 10px 0; font-weight: bold; }
+
+.video-avance {
+    width: 100%; max-width: 280px; border-radius: 10px; margin-top: 10px; border: 1px solid #32cd32;
+}
+
+.entrada-chat { display: flex; justify-content: center; gap: 10px; width: 90%; max-width: 600px; margin: 0 auto; }
 
 button { 
     background: #32cd32; color: black; border: none; 
     padding: 12px 25px; border-radius: 8px; cursor: pointer; 
-    font-weight: bold; margin: 5px; 
+    font-weight: bold; transition: 0.3s;
 }
+button:hover { background: #28a428; transform: scale(1.05); }
 
 input { 
-    padding: 12px; background: #111; color: white; 
-    border: 1px solid #333; border-radius: 8px; width: 80%; 
+    flex-grow: 1; padding: 12px; background: #111; color: white; 
+    border: 1px solid #333; border-radius: 8px; outline: none;
 }
+input:focus { border-color: #32cd32; }
